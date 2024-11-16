@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Interactivo con Zonas</title>
+    <!-- Importar CSS de Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Importar JavaScript de Leaflet -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .centrar1 {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .container1 {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            width: 100%;
+            max-width: 1000px;
+            /* Ajustamos el tamaño máximo del contenedor */
+            height: 700px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        #map {
+            width: 60%;
+            height: 100%;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+
+        .info-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 35%;
+            height: 100%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+
+        .botonEncuesta {
+            padding: 10px 20px;
+            font-size: 16px;
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .botonEncuesta:hover {
+            background-color: #0056b3;
+        }
+
+        .botonEncuesta a {
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="centrar1">Centros de Atención</h1>
+
+    <!-- Combo Box de Zonas -->
+    <div class="container1">
+        <h2>Zonas:</h2>
+        <select id="zone-selector"> <!-- El nombre que va dentro del value seria el nombre de la img -->
+            <option value="Buenos_Aires">Buenos Aires</option>
+            <option value="caballito">Caballito</option>
+            <option value="flores">Flores</option>
+            <option value="parquePatricios">Parque Patricios </option>
+        </select>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="container">
+        <!-- Mapa interactivo a la izquierda -->
+        <div id="map"></div>
+
+        <!-- Panel de información a la derecha -->
+        <div class="info-panel">
+            <h4 id="info-titulo">Selecciona un punto en el mapa</h4>
+            <p id="info-descripcion">Aquí aparecerá la información del centro seleccionado.</p>
+            <button class="botonEncuesta" id="RealizarEncuesta"><a href=Encuesta.html>Realizar Encuesta</a></button>
+        </div>
+    </div>
+
+    <script>
+        // Inicializar el mapa
+        let map = L.map('map', {
+            crs: L.CRS.Simple,
+            minZoom: -4,
+        });
+
+        // Función para cargar una imagen en el mapa
+        let currentImageOverlay;
+        let currentMarkers = [];
+
+        function cargarImagenZona(imagen) {
+            if (currentImageOverlay) {
+                map.removeLayer(currentImageOverlay); // Eliminar la imagen anterior
+            }
+            currentImageOverlay = L.imageOverlay(imagen, [[0, 0], [600, 800]]).addTo(map);
+            map.fitBounds([[0, 0], [600, 800]]);
+        }
+
+        // Sets de marcadores para cada zona
+        const marcadoresPorZona = {
+            Buenos_Aires: [
+                {
+                    nombre: 'Centro de Atención "Salud Total"',
+                    descripcion: `Ubicación: Av. Principal 123, Zona Norte.
+            Especialidades: Medicina general, pediatría, ginecología, y cardiología.
+            Características:
+            - Instalaciones modernas con salas de espera amplias y áreas específicas para pediatría.
+            - Laboratorio para pruebas rápidas y un área de urgencias equipada.
+            - Ofrece consultas presenciales y telemedicina.
+            Personal:
+            - Dr. Jorge Pérez, médico general.
+            - Dra. Laura Martínez, pediatra.
+            - Enfermera Diana Gómez, especializada en atención de urgencias.
+            - Recepcionista: Paula Ramírez, quien gestiona citas y pagos.`,
+                    coordenadas: [200, 200]
+                },
+                {
+                    nombre: 'Centro de Bienestar "Vida Sana"',
+                    descripcion: `Ubicación: Calle Secundaria 45, Zona Centro.
+            Especialidades: Nutrición, psicología, fisioterapia, y salud mental.
+            Características:
+            - Consultorios para sesiones individuales y grupales.
+            - Enfoque en la prevención y manejo de enfermedades crónicas mediante cambios de estilo de vida.
+            - Talleres de meditación y manejo de estrés.
+            Personal:
+            - Lic. Ana Torres, nutricionista.
+            - Dr. Carlos Mendoza, psicólogo clínico.
+            - Fisioterapeuta Claudia Suárez, 
+            - Coordinadora de bienestar: Patricia León, encargada de los talleres.`,
+                    coordenadas: [250, 300]
+                }
+            ],
+            caballito: [
+                {
+                    nombre: 'Centro de Rehabilitación "Movilízate"',
+                    descripcion: `Ubicación: Av. Reforma 78, Zona Este.
+            Especialidades: Rehabilitación física, ortopedia, y terapia ocupacional.
+            Características:
+            - Equipos avanzados para terapias físicas, incluyendo hidroterapia.
+            - Programa de terapia ocupacional para personas con movilidad reducida.
+            - Evaluación y diagnóstico de lesiones deportivas.
+            Personal:
+            - Dr. Hugo Ortiz, ortopedista.
+            - Terapeuta Diana Ríos, especializada en hidroterapia.
+            - Terapeuta ocupacional Ricardo López, experto en programas de rehabilitación de movilidad.
+            - Asistente de rehabilitación: Juan Torres, quien ayuda a los pacientes en sus ejercicios.`,
+                    coordenadas: [300, 200]
+                },
+                {
+                    nombre: 'Centro de Atención Integral "Familia y Salud"',
+                    descripcion: `Ubicación: Calle Principal 56, Zona Sur.
+            Especialidades: Medicina familiar, odontología, optometría, y ginecología.
+            Características:
+            - Atención integral para toda la familia en un solo lugar.
+            - Consultas de rutina, cuidado dental y visual.
+            - Programas de salud preventiva y charlas educativas.
+            Personal:
+            - Dr. Manuel Espinoza, médico familiar.
+            - Dra. Sara López, odontóloga.
+            - Optometrista Luis Fernández.
+            - Administradora: Karla Muñoz, encargada de la organización de los programas y charlas de salud.`,
+                    coordenadas: [150, 300]
+                }
+            ],
+            flores: [
+                {
+                    nombre: 'Centro de Salud Integral "Cuidarte"',
+                    descripcion: `Ubicacion: Calle Primavera 89, Zona Norte.
+            Especialidades: Dermatología, endocrinología, reumatología y nutrición.
+            Características:
+            - Ofrecen diagnósticos y tratamientos avanzados para enfermedades de la piel y condiciones hormonales.
+            - Consultorios con equipos de última tecnología para el análisis de piel y estudios hormonales.
+            - Charlas sobre autocuidado de la piel y manejo de enfermedades crónicas.
+            Personal:
+            - Dr. Marcos Silva, dermatólogo.
+            - Dra. Elena Cruz, endocrinóloga.
+            - Lic. Gabriela Herrera, nutricionista especializada en enfermedades metabólicas.
+            - Coordinadora de atención: Miriam López, encargada de gestionar citas y programas educativos.`,
+                    coordenadas: [400, 400]
+                },
+                {
+                    nombre: 'Clínica de Especialidades "Salud y Vida"',
+                    descripcion: `Ubicación: Av. Central 34, Zona Este.
+            Especialidades: Neumología, gastroenterología, neurología, y medicina interna.
+            Características:
+            - Equipos avanzados para diagnósticos y tratamientos de enfermedades respiratorias, digestivas y neurológicas.
+            - Laboratorio de análisis clínicos y área de pruebas específicas para estudios respiratorios y digestivos.
+            - Servicios de consulta externa y hospitalización corta.
+            Personal:
+            - Dr. Francisco Luna, neumólogo.
+            - Dra. Camila Ríos, gastroenteróloga.
+            - Dr. Daniel Prieto, neurólogo.
+            - Administradora de clínica: Karla Méndez, quien organiza citas y maneja los procesos de atención hospitalaria.`,
+                    coordenadas: [350, 450]
+                }
+            ],
+            parquePatricios: [
+                {
+                    nombre: 'Centro Psicológico "Equilibrio"',
+                    descripcion: ` Ubicación: Av. Libertad 110, Zona Oeste.
+            Especialidades:  Psicología infantil, psicoterapia familiar, terapia de pareja, y salud mental.
+            Características:
+            - Espacios diseñados para brindar comodidad y privacidad durante las sesiones.
+            - Terapias individuales y grupales para todas las edades, incluyendo técnicas de manejo de estrés y depresión.
+            - Talleres sobre inteligencia emocional y resolución de conflictos.
+            Personal:
+            - Psicóloga infantil: Lic. Andrea Paz.
+            - Psicoterapeuta familiar: Dr. Rodrigo Álvarez.
+            - Terapeuta de pareja: Lic. Sandra Moreno.
+            - Coordinadora de sesiones: Laura Vázquez, quien organiza las citas y talleres para pacientes.`,
+                    coordenadas: [300, 500]
+                },
+                {
+                    nombre: 'Centro de Atención "Visión y Sonrisa"',
+                    descripcion: ` Ubicación: Calle Luna 77, Zona Sur.
+            Especialidades: Odontología, ortodoncia, optometría, y oftalmología.
+            Características:
+            - Servicios de cuidado visual y dental en un solo centro, ideal para familias.
+            - Consultorios especializados en ortodoncia y cirugía ocular.
+            - Promociones para revisiones y limpiezas dentales, así como exámenes de la vista.
+            Personal:
+            - Dr. Raúl Espinosa, odontólogo general.
+            - Dra. Paula Ortiz, ortodoncista.
+            - Optometrista José Miranda.
+            - Recepcionista: Gloria Torres, quien gestiona citas y orientación de servicios.`
+                    , coordenadas: [150, 300]
+                }
+            ]
+        };
+
+        // Función para actualizar los marcadores en el mapa
+        function actualizarMarcadores(zona) {
+            // Eliminar marcadores existentes
+            currentMarkers.forEach(marker => map.removeLayer(marker));
+            currentMarkers = [];
+
+            // Añadir nuevos marcadores según la zona seleccionada
+            const marcadores = marcadoresPorZona[zona] || [];
+            marcadores.forEach(punto => {
+                const marker = L.marker(punto.coordenadas)
+                    .addTo(map)
+                    .on('click', () => actualizarInfo(punto.nombre, punto.descripcion));
+
+                currentMarkers.push(marker);
+            });
+        }
+
+        // Función para actualizar la información en el panel derecho
+        function actualizarInfo(nombre, descripcion) {
+            document.getElementById('info-titulo').textContent = nombre;
+            document.getElementById('info-descripcion').textContent = descripcion;
+        }
+
+        // Inicializar con la primera zona
+        cargarImagenZona('Buenos_Aires.jpeg');
+        actualizarMarcadores('Buenos_Aires');
+
+        // Escuchar cambios en el combo box
+        document.getElementById('zone-selector').addEventListener('change', function () {
+            const selectedZone = this.value;
+            cargarImagenZona(`${selectedZone}.jpeg`);
+            actualizarMarcadores(selectedZone);
+        });
+    </script>
+</body>
+
+</html>

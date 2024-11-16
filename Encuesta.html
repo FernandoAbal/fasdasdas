@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta de Clasificación</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: justify;
+        }
+        .survey-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        .question {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        select {
+            width: 100%;
+            padding: 5px;
+            font-size: 16px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Encuesta de Clasificación</h1>
+
+    <div class="survey-container">
+        <form id="surveyForm">
+            <!-- Pregunta de ejemplo, añade más preguntas de manera similar -->
+            <div class="question">
+                <label for="q1">1. ¿Cómo calificaría la calidad de la atención recibida en el centro de salud?</label>
+                <select id="q1">
+                    <option value="0">Selecciona una opción</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+            <div class="question">
+                <label for="q2">2. ¿Cómo evaluaría la amabilidad y disposición del personal médico?</label>
+                <select id="q2">
+                    <option value="0">Selecciona una opción</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+            <div class="question">
+                <label for="q3">3. ¿Cómo calificaría la claridad con la que le explicaron su diagnóstico y tratamiento?</label>
+                <select id="q3">
+                    <option value="0">Selecciona una opción</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+            <div class="question">
+                <label for="q4">4. ¿Qué tan satisfecho estuvo con el tiempo de espera para ser atendido?</label>
+                <select id="q4">
+                    <option value="0">Selecciona una opción</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+            <div class="question">
+                <label for="q5">5. ¿Cómo evaluaría la limpieza y el estado de las instalaciones del centro de salud?</label>
+                <select id="q5">
+                    <option value="0">Selecciona una opción</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+            <div class="question">
+                <label for="q6">6. ¿Qué tan fácil le resultó acceder al centro de salud y encontrar asistencia?</label>
+                <select id="q6">
+                    <option value="0">Selecciona una opción</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+            <div class="question">
+                <label for="q7">7. ¿Qué tan satisfecho estuvo con la atención administrativa al ingresar al centro?</label>
+                <select id="q7">
+                    <option value="0">Selecciona una opción</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+            <div class="question">
+                <label for="q8">8. ¿Se sintió escuchado y comprendido por el personal médico durante su consulta?</label>
+                <select id="q8">
+                    <option value="0">Selecciona una opción</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+            <div class="question">
+                <label for="q9">9. ¿Recomendaría este centro de salud a familiares o amigos?</label>
+                <select id="q9">
+                    <option value="0">Selecciona una opción</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+            <div class="question">
+                <label for="q10">10. En general, ¿cómo evaluaría su experiencia en este centro de salud?</label>
+                <select id="q10">
+                    <option value="0">Selecciona una opción</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+            <!-- Repite este bloque para cada pregunta y cambia el `id` a `q2`, `q3`, etc. -->
+
+            <!-- Botones para interactuar con los datos -->
+            <button type="button" onclick="calcularPromedio()">Enviar y Guardar Encuesta</button>
+            <button type="button" onclick="mostrarResultadosGuardados()">Ver Resultados Guardados</button>
+            <button type="button" onclick="limpiarResultadosGuardados()">Limpiar Resultados Guardados</button>
+        </form>
+
+        <!-- Área para mostrar resultados -->
+        <div class="result" id="result"></div>
+    </div>
+
+    <!-- Vinculación del archivo JavaScript -->
+    <script src="Encuesta.js"></script>
+</body>
+</html>
